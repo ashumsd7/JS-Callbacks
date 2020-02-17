@@ -1,0 +1,152 @@
+	#CALLBACK                                   FEB/17/2020
+---
+Many Actions in JavaScript are asynchronous as we know that we initiate them now but they finish later.
+i.e. setTimeout()
+How to add any tag dunamically:
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Callbacks</title>
+</head>
+<body>
+    
+    <script>
+function loadScript(src){
+    let script= document.createElement("script");
+    script.src=src;
+    document.head.append(script);
+}
+loadScript("1.js")
+
+
+/*
+------------
+--------any code 
+*/
+    </script>
+</body>
+</html>
+```
+After Execution a script tag will be added in head section of Document.
+
+Now let's see what we have to understand:
+The browser automatically starts loading it and execute when complete.
+
+This script is executed "asynchronously" , as it starts loading now , but runs later, when a function already finished.
+
+If there is any code below loadscript(); method it doesn't wait until the script loading finishes.
+Now Think about this situation, if want one more script to be loaded just after the  loadscript()  method. then it will not work.
+becoz the function which we want to call or use below may be having dependency on above function loadScript() which is still loading.
+
+So it will not work, so what then?
+
+Make something like this, it will work when we insist that hey fun number 2 u will run just after the loadScript() but run only when your dad loadScript() is finished.
+
+Here Callback plays very important role. Now we are able to make that happen about what we are thinking.
+We make  second function as callback function.
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Callbacks</title>
+</head>
+<body>
+    
+    <script>
+function loadScript(src,callback){
+    let script= document.createElement("script");
+    script.src=src;
+    script.onload= ()=>callback(script);
+    document.head.append(script);
+}
+loadScript("1.js")
+    </script>
+</body>
+</html>
+```
+
+```
+script.onload= ()=>callback(script);  
+
+
+is equivalent to
+
+
+"use strict";
+script.onload = function() {
+  return callback(script);
+};
+```
+The second argument of loadScript() function is a function itself (usually a anonymous function) that  runs when action is completed.
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Callbacks</title>
+</head>
+<body>
+    
+    <script>
+function loadScript(src,callback){
+    let script= document.createElement("script");
+    script.src=src;
+    script.onload= ()=>callback(script);
+    document.head.append(script);
+}
+loadScript("1.js", script=>{
+alert(` hey the script ${script.src} is loaded`);
+alert(_);
+});
+    </script>
+</body>
+</html>
+```
+Output:
+
+
+ This is called  callback based"  style of asynchronous programming. Like this we can  make this type of callback functions again an again and a nested too.
+Learn form here too
+In JavaScript functions are objects, because of this function can take function as arguments, they ca be returned by other functions. Functions that do this are called "  Higher Order Functions".  Any function that is passed as an argument is called  callback function .
+Example:
+```
+function doHomework(subject,callback){
+    console.log(`I am doing homework of ${subject}`);
+    callback();
+}
+doHomework("math",function(){
+    console.log("homework finished");
+});
+
+```
+
+```
+Output:
+1. I am doing homework of math
+2.homework finished
+```
+This is also a way
+```
+function doHomework(subject,callback){
+    console.log(`I am doing homework of ${subject}`);
+    callback();
+}
+doHomework("math",finish);
+function finish(){
+    console.log("homework Finished");
+}
+
+```
+
+```
+Output:
+I am doing homework of math
+homework Finished
+```
